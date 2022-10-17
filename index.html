@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- copy link tAG from https://cdnjs.com/libraries/font-awesome  cdnjs.com libraries font awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css" 
+    integrity="sha512-xh6O/CkQoPOWDdYTDqeRdPCVd1SpvCA9XXcUnZS2FmJNp1coAFzvtCN9BmamE+4aHK8yyUHUSCcJHgXloTyT2A==" 
+    crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <!--  -->
+    <link rel="stylesheet" href="style.css">
+    <!-- here we are using a data aos css plugin 
+    from this page => https://michalsnik.github.io/aos/ -->
+    <!-- CDN SOURCES  for animation to the text card--> 
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <!-- <link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" /> -->
+    <title>Random Quotes</title>
+</head>
+<body>
+    <!-- comment out all bellows div id and button id after completion of task -->
+    <!-- <div id="quotes"></div>
+    <div id="author"></div>
+    <button id="newQ">New Quotes</button>
+    <button id="tweetMe">birdimage</button> -->
+<!-- CSS part started -->
+<div class="container">
+    <div class="inner">
+        <!-- <div class="inner" data-aos="flip-right"> -->
+            <!-- add data aos plugin here -->
+        <div class="box" data-aos="flip-right">
+            <p class="number">
+                <img src="twitter logo.png" alt="tweetMe" id="tweetMe" title="TweetMe">
+            </p>
+            <!-- CONATINER FOR TEXT -->
+            <div class="text">
+                <!-- for bigger Quotation Marks -->
+                <i class="start-quote fas fa-quote-left"></i>
+                <p id="quotes" class="quote"></p>
+                <p id="author" class="author"></p>
+            </div>
+            <!-- new quotes button -->
+            <label class="button">
+                <p id="newQ"> New Quotes </p>
+            </label>
+        </div>
+    </div>
+</div>
+<!-- CDN SOURCES  for animation to the text card--> 
+<script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script>
+        // INITIALIZE AOS
+        AOS.init();
+        // at the last write document.getElementById to fetch data to the page
+        const newQ = document.getElementById("newQ"); // add event listner to it
+        const quotes = document.getElementById("quotes");
+        const author = document.getElementById("author");
+        const tweetMe = document.getElementById("tweetMe");
+        // we have to use realData multiple time so we; call or define realData outside of function
+        let realData = "";
+        let quotesData = "";
+
+        // define tweetNow function
+        const tweetNow = () => {
+            let tweetPost = `https://twitter.com/intent/tweet?text=${quotesData.text} ${quotesData.author}`;
+            window.open(tweetPost);
+        };
+        // defining getNewQuotes function allways above  to fat Arrow function
+        const getNewQuotes = () => {
+            // let rnum = Math.random();
+            // this Math.random allways gives us value between  0 to 1 example
+            // console.log(rnum); // 0.8945347039137479
+            let rnum = Math.floor(Math.random() * 1001); // to get number between 0 to 10
+            // console.log(rnum); // 9
+            // console.log(realData[rnum].text);
+            quotesData = realData[rnum];
+            // quotes.innerText = `${realData[rnum].text}`;
+            // author.innerText = `${realData[rnum].author}`;
+            quotes.innerText = `${quotesData.text}`;
+           // author.innerText = `${quotesData.author}`;
+            // if no author found then what to show in page ans is => unknown
+            quotesData.author == null
+            ? (author.innerText = "unKnown") : (author.innerText = `${quotesData.author}`);
+        };
+        // i use thunder client for api testing and modifying insted of postman. 
+        const getQuotes = async () => {
+          const api = "https://type.fit/api/quotes";
+          try {
+            let data = await fetch(api);
+            // let realData = await data.json();
+            realData = await data.json();
+            // write new function to get new random quotes
+            getNewQuotes();
+            // console.log(realData);
+            // to see our first quotes in console
+            // in json form
+            // console.log(realData[0]);
+            // in text form
+            // console.log(realData[10].text);
+            // console.log(realData[10].author);
+            // console.log(realData[10]);
+            // {text: 'Peace comes from within. Do not seek it without.', author: 'Buddha'}
+            // console.log(realData.length); // 1643 total lentgh.
+          } catch (error) {}
+        };
+
+        // call getQuotes
+        getQuotes();
+        // add event listner to button
+        newQ.addEventListener("click", getNewQuotes); // on clicking , getNewQuotes function call .
+        // add event listner to tweeter bird image
+        tweetMe.addEventListener("click",tweetNow); // on clicking , tweetNow function call.
+    </script>
+</body>
+</html>
